@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#08080b">
   <meta name="description" content="Editkaro.in — cinematic video editing and social media marketing studio.">
   <title>Editkaro.in — Motion with Meaning</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,6 +12,15 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body class="is-loading">
+  <noscript>
+    <style>
+      body.is-loading { overflow: auto; }
+      body.is-loading main, body.is-loading .site-header { opacity: 1; transform: none; }
+      .opening { display: none; }
+      body.is-loading .reveal, body.is-loading .reveal-line { opacity: 1 !important; transform: none !important; animation: none !important; }
+    </style>
+    <p class="noscript-message">JavaScript is disabled. The portfolio remains available, but interactive video previews require JavaScript.</p>
+  </noscript>
   <div class="opening" id="opening" aria-hidden="true">
     <div class="opening-panel opening-panel-top"></div>
     <div class="opening-panel opening-panel-bottom"></div>
@@ -33,8 +43,14 @@
       <a href="#process">Our process</a>
       <a href="#contact">Contact</a>
     </nav>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="mobileNav" aria-label="Open navigation menu"><span></span><span></span></button>
     <a href="#contact" class="nav-cta magnetic"><span>Start a project</span><i>↗</i></a>
   </header>
+  <nav class="mobile-nav" id="mobileNav" aria-label="Mobile navigation" aria-hidden="true">
+    <a href="#work">Selected work <i>↘</i></a>
+    <a href="#process">Our process <i>↘</i></a>
+    <a href="#contact">Contact <i>↘</i></a>
+  </nav>
 
   <main>
     <section class="hero section-shell" aria-labelledby="hero-title">
@@ -70,10 +86,10 @@
         <div class="timecode">00:00:34:21</div>
         <div class="sound-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
         <div class="showreel-badges" aria-label="Showreel categories">
-          <button type="button" data-title="Clutch moments in 4K" data-category="Football edits" data-image="https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?auto=format&fit=crop&w=1800&q=85" data-theme="football">Football <b>↗</b></button>
-          <button type="button" data-title="Louder than the lobby" data-category="Gaming videos" data-image="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1800&q=85" data-theme="gaming">Gaming <b>↗</b></button>
-          <button type="button" data-title="Stories worth sitting with" data-category="Documentary style" data-image="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=1800&q=85" data-theme="doc">Documentary <b>↗</b></button>
-          <button type="button" data-title="Made to live in the feed" data-category="Short form videos" data-image="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=1800&q=85" data-theme="social">Social <b>↗</b></button>
+          <button type="button" data-title="Clutch moments in 4K" data-category="Football edits" data-image="https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?auto=format&fit=crop&w=1800&q=85" data-video="https://media.w3.org/2010/05/bunny/trailer.mp4" data-theme="football">Football <b>↗</b></button>
+          <button type="button" data-title="Louder than the lobby" data-category="Gaming videos" data-image="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1800&q=85" data-video="https://media.w3.org/2010/05/sintel/trailer.mp4" data-theme="gaming">Gaming <b>↗</b></button>
+          <button type="button" data-title="Stories worth sitting with" data-category="Documentary style" data-image="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=1800&q=85" data-video="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" data-theme="doc">Documentary <b>↗</b></button>
+          <button type="button" data-title="Made to live in the feed" data-category="Short form videos" data-image="https://images.unsplash.com/photo-1611162617474-5b21e879e113?auto=format&fit=crop&w=1800&q=85" data-video="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" data-theme="social">Social <b>↗</b></button>
         </div>
       </div>
     </section>
@@ -147,7 +163,15 @@
     <div class="lightbox-backdrop" data-close-lightbox></div>
     <div class="lightbox-panel">
       <button class="close-lightbox" type="button" data-close-lightbox aria-label="Close preview">×</button>
-      <div class="lightbox-video"><img id="lightboxImage" src="" alt=""><div class="video-vignette"></div><button class="lightbox-play" type="button" aria-label="Play preview">▶</button><div class="video-progress"><span></span></div><div class="video-controls"><span>▶ 00:00</span><span>HD &nbsp; ⛶</span></div></div>
+      <div class="lightbox-video" id="lightboxMedia">
+        <img class="video-fallback" id="lightboxPoster" src="" alt="">
+        <video id="lightboxVideo" preload="metadata" playsinline aria-describedby="lightboxTitle"><p>Your browser does not support HTML video.</p></video>
+        <div class="video-vignette"></div>
+        <button class="lightbox-play" id="lightboxPlay" type="button" aria-label="Play video preview">▶</button>
+        <div class="video-progress" aria-hidden="true"><span id="videoProgress"></span></div>
+        <div class="video-controls"><span id="videoTime">▶ 00:00</span><span id="videoStatus">HD</span></div>
+        <p class="video-error" id="videoError" role="status">Preview unavailable. Please try another project.</p>
+      </div>
       <div class="lightbox-info"><span class="eyebrow" id="lightboxCategory"></span><h2 id="lightboxTitle"></h2><p id="lightboxDescription"></p><div><span id="lightboxClient"></span><span id="lightboxDuration"></span></div></div>
     </div>
   </div>
